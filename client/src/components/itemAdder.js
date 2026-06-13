@@ -47,13 +47,15 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const ItemAdder = () => {
+const ItemAdder = ({ onShowCheckout }) => {
   const classes = useStyles();
   const [input, setInput] = React.useState('')
   const [price, setPrice] = React.useState('')
   const [items, setItems] = React.useState([])
   const fetchItems = async () => {
-    await Axios.get('http://localhost:9000/groccery/getAll').then(response => {
+    await Axios.get('http://localhost:9000/groccery/getAll', {
+      headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
+    }).then((response) => {
       setItems(response.data)
     })
   }
@@ -65,7 +67,9 @@ const ItemAdder = () => {
       return;
     }
     const data = { grocceryItem: input, price: priceValue }
-    Axios.post('http://localhost:9000/groccery/add', data).then(response => {
+    Axios.post('http://localhost:9000/groccery/add', data, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
+    }).then(() => {
       setInput("")
       setPrice("")
       fetchItems()
@@ -117,7 +121,7 @@ const ItemAdder = () => {
           <AddIcon />
         </IconButton>
       </Paper>
-      <ItemList items={items} refreshItems={fetchItems} />
+      <ItemList items={items} refreshItems={fetchItems} onShowCheckout={onShowCheckout} />
     </div>
   )
 }

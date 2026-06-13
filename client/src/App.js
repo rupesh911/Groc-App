@@ -1,32 +1,83 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import ItemAdder from './components/itemAdder';
-import Month from "./components/ShowMonth";
+import Month from './components/ShowMonth';
 import Navbar from './components/Navbar';
 import GroceryCategories from './components/GroceryCategories';
 import CategoryPage from './components/CategoryPage';
+import Checkout from './components/Checkout';
+import CheckoutSuccess from './components/CheckoutSuccess';
+import Login from './components/Login';
+import Register from './components/Register';
+import Profile from './components/Profile';
+import ProtectedRoute from './components/ProtectedRoute';
+import { getUserEmail, getUserName, isAuthenticated } from './services/authService';
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [authenticated, setAuthenticated] = useState(isAuthenticated());
+  const [userEmail, setUserEmail] = useState(getUserEmail() || '');
+  const [userName, setUserName] = useState(getUserName() || '');
 
-  return (
-    <div className="App">
-      <Navbar />
+  useEffect(() => {
+    setAuthenticated(isAuthenticated());
+    setUserEmail(getUserEmail() || '');
+    setUserName(getUserName() || '');
+  }, [authenticated]);
+
+  const handleLogin = (_, email, name) => {
+    setAuthenticated(true);
+    setUserEmail(email);
+    setUserName(name || '');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('grocify_token');
+    localStorage.removeItem('grocify_email');
+    localStorage.removeItem('grocify_name');
+    setAuthenticated(false);
+    setUserEmail('');
+    setUserName('');
+  };
+
+  const MainPage = () => (
+    <>
       <Month />
-      {selectedCategory ? (
-        <CategoryPage
-          category={selectedCategory}
-          onBack={() => setSelectedCategory(null)}
-        />
+      {showCheckout ? (
+        <Checkout onBack={() => setShowCheckout(false)} />
+      ) : selectedCategory ? (
+        <CategoryPage category={selectedCategory} onBack={() => setSelectedCategory(null)} />
       ) : (
         <>
           <GroceryCategories onSelectCategory={setSelectedCategory} />
           <header className="App-header">
-            <ItemAdder />
+            <ItemAdder onShowCheckout={() => setShowCheckout(true)} />
           </header>
         </>
       )}
-    </div>
+    </>
+  );
+
+  return (
+    <Router>
+      <div className="App">
+        <Navbar isAuthenticated={authenticated} onLogout={handleLogout} currentUser={userName || userEmail} />
+        <Switch>
+          <Route path="/login">
+            {authenticated ? <Redirect to="/" /> : <Login onLogin={handleLogin} />}
+          </Route>
+          <Route path="/register">
+            {authenticated ? <Redirect to="/" /> : <Register />}
+          </Route>
+          <ProtectedRoute path="/checkout-success" component={CheckoutSuccess} />
+          <ProtectedRoute exact path="/" component={MainPage} />
+          <ProtectedRoute path="/profile" component={() => <Profile onLogout={handleLogout} />} />
+          <Redirect to="/" />
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

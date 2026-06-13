@@ -17,7 +17,8 @@ const GroceryCategories = ({ onSelectCategory }) => {
   return (
     <div className="category-section">
       <h3>Available grocery categories in Grocify</h3>
-      <p>Add items from categories like vegetables, fruits, dairy, snacks, beverages, household and more. Click a category to open its product page.</p>
+      <p>Add items from categories like vegetables, fruits, dairy, bakery, snacks, beverages, household, frozen, and personal care.</p>
+      <p className="category-description-small">Click a category to move to a different page and add products.</p>
       <div className="category-list">
         {categories.map((category) => (
           <button

@@ -4,7 +4,7 @@ import "./Style.css";
 
 const productsByCategory = {
   Vegetables: [
-    { name: "Tomatoes", price: 42 },
+    { name: "Tomatoes", price: 1 },
     { name: "Onions", price: 30 },
     { name: "Potatoes", price: 25 },
     { name: "Spinach", price: 18 },
@@ -64,10 +64,17 @@ const CategoryPage = ({ category, onBack }) => {
 
   const addProduct = (product) => {
     const data = { grocceryItem: `${product.name} (${category})`, price: product.price };
-    Axios.post("http://localhost:9000/groccery/add", data).then(() => {
-      setFeedback(`${product.name} added to your Grocify list.`);
-      setTimeout(() => setFeedback(""), 2800);
-    });
+    Axios.post('http://localhost:9000/groccery/add', data, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
+    })
+      .then(() => {
+        setFeedback(`${product.name} added to your Grocify list.`);
+        setTimeout(() => setFeedback(''), 2800);
+      })
+      .catch((error) => {
+        setFeedback(error.response?.data || 'Unable to add item');
+        setTimeout(() => setFeedback(''), 2800);
+      });
   };
 
   const products = productsByCategory[category] || [];

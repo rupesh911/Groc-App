@@ -30,8 +30,10 @@ const useStyles = makeStyles((theme) =>
         listSection: {
         },
         
-        text:{
-            textDecoration: 'line-through'
+        purchasedText:{
+            textDecoration: 'line-through',
+            color: '#bdbdbd',
+            fontSize: '1rem',
         }
     })
 );
@@ -40,13 +42,17 @@ const useStyles = makeStyles((theme) =>
 const ItemList = (props) => {
     const handleClick = (value) => {
         const data = { id: value._id }
-        Axios.post('http://localhost:9000/groccery/updatePurchaseStatus', data).then(() => {
+        Axios.post('http://localhost:9000/groccery/updatePurchaseStatus', data, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
+        }).then(() => {
             if (props.refreshItems) props.refreshItems()
         })
     }
     const handelDelete = (value) => {
         const data = { id: value._id }
-        Axios.post('http://localhost:9000/groccery/deleteGrocceryItem', data).then(() => {
+        Axios.post('http://localhost:9000/groccery/deleteGrocceryItem', data, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
+        }).then(() => {
             if (props.refreshItems) props.refreshItems()
         })
     }
@@ -59,7 +65,14 @@ const ItemList = (props) => {
                 const showPrice = value.price > 0;
                 return (
                     <ListItem key={value._id} button>
-                        <ListItemText id={value._id}  primary={value.grocceryItem + (showPrice ? `  |  ₹${Number(value.price).toFixed(2)}` : '')} className={value.isPurchased ?classes.text: '' } />
+                        <ListItemText
+                            id={value._id}
+                            primary={value.grocceryItem + (showPrice ? `  |  ₹${Number(value.price).toFixed(2)}` : '')}
+                            primaryTypographyProps={{
+                                className: value.isPurchased ? classes.purchasedText : '',
+                                style: { fontSize: '1rem' },
+                            }}
+                        />
                         <ListItemSecondaryAction>
                             <Button onClick={() => {
                                 handleClick(value )
@@ -74,6 +87,38 @@ const ItemList = (props) => {
             })}
         </List>
         <div style={{textAlign: 'right', fontWeight: 600, margin: '0.7em 0 0.2em 0', fontSize: '1.1em', color: '#232526'}}>Total: ₹{total.toFixed(2)}</div>
+        {props.items.length > 0 && (
+            <button 
+                className="checkout-action-button"
+                onClick={() => {
+                    if (props.onShowCheckout) props.onShowCheckout();
+                }}
+                style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    marginTop: '1rem',
+                    background: 'linear-gradient(135deg, #ff9800 0%, #ff5722 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                    boxShadow: '0 6px 18px rgba(255, 87, 34, 0.25)'
+                }}
+                onMouseOver={(e) => {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 10px 24px rgba(255, 87, 34, 0.35)';
+                }}
+                onMouseOut={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 6px 18px rgba(255, 87, 34, 0.25)';
+                }}
+            >
+                🛒 Proceed to Checkout
+            </button>
+        )}
         </>
     )
 }
