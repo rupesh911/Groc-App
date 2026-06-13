@@ -41,35 +41,32 @@ const ItemList = (props) => {
     const [orderStatus, setOrderStatus] = React.useState(false)
     const handleClick = (value) => {
         const data = { id: value._id }
-        Axios.post('http://localhost:8000/groccery/updatePurchaseStatus', data).then(response => {
+        Axios.post('http://localhost:9000/groccery/updatePurchaseStatus', data).then(response => {
             setOrderStatus(!orderStatus)
         })
     }
     const handelDelete = (value) => {
         const data = { id: value._id }
         console.log(data)
-        Axios.post('http://localhost:8000/groccery/deleteGrocceryItem', data).then(response => {
+        Axios.post('http://localhost:9000/groccery/deleteGrocceryItem', data).then(response => {
             setOrderStatus(!orderStatus)
         })
     }
     const classes = useStyles();
+    const total = props.items.reduce((sum, item) => sum + (item.price > 0 ? item.price : 0), 0);
     return (
+        <>
         <List dense className={classes.root}>
             {props.items.map((value) => {
+                const showPrice = value.price > 0;
                 return (
                     <ListItem key={value._id} button>
-
-                        <ListItemText id={value._id}  primary={value.grocceryItem } className={value.isPurchased ?classes.text: '' } />
-
+                        <ListItemText id={value._id}  primary={value.grocceryItem + (showPrice ? `  |  ₹${Number(value.price).toFixed(2)}` : '')} className={value.isPurchased ?classes.text: '' } />
                         <ListItemSecondaryAction>
-
                             <Button onClick={() => {
                                 handleClick(value )
-                            
                             }}>{value.isPurchased ? 'Purchased': 'To Purchase'}
-                
                             </Button>
-
                             <IconButton color="primary" aria-label="upload picture" component="span" onClick={()=>{handelDelete(value)}}>
                                 <Delete />
                             </IconButton>
@@ -78,6 +75,8 @@ const ItemList = (props) => {
                 );
             })}
         </List>
+        <div style={{textAlign: 'right', fontWeight: 600, margin: '0.7em 0 0.2em 0', fontSize: '1.1em', color: '#232526'}}>Total: ₹{total.toFixed(2)}</div>
+        </>
     )
 }
 

@@ -1,12 +1,11 @@
 import React from "react";
- import "./Style.css";
+import "./Style.css";
 function Navbar() {
     return (
-        
       <div className="nav" >
-        <h2>Montly Grocery Planning App</h2>
-        </div>
-        
+        <span className="logo">Grocify</span>
+        <h2>Monthly Grocery Planning App</h2>
+      </div>
     )
 }
 

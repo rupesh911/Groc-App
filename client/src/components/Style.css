@@ -1,15 +1,220 @@
-#month{
-    margin-bottom: 10%;
-    color: black;
-    font-size: calc(10px + 2vmin);
-    text-align:center;
-    margin-top: 10px;
-    
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
 
+body {
+  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+  min-height: 100vh;
+  margin: 0;
+  animation: bgmove 12s ease-in-out infinite alternate;
 }
-.nav{
-    color: whitesmoke;
-    background-color:black;
-    height: 40px ; 
-    align-items: center;
+
+@keyframes bgmove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.logo {
+  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 2.1rem;
+  letter-spacing: 2px;
+  color: #ff9800;
+  background: linear-gradient(90deg, #ff9800 0%, #ff5722 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-right: 1.2rem;
+  text-shadow: 0 2px 8px rgba(255,152,0,0.08);
+  display: flex;
+  align-items: center;
+}
+
+/* Modern Navbar Styles */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: linear-gradient(90deg, #232526 0%, #414345 100%);
+  color: #fff;
+  padding: 0 2rem;
+  height: 60px;
+  box-shadow: 0 4px 24px rgba(31, 38, 135, 0.18), 0 2px 8px rgba(0,0,0,0.07);
+  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+  border-radius: 0 0 18px 18px;
+  margin-bottom: 2.5rem;
+  z-index: 10;
+}
+
+.nav h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Month Display */
+#month {
+  margin: 0 auto 2.5rem auto;
+  color: #232526;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: rgba(255,255,255,0.55);
+  border-radius: 16px;
+  padding: 1.2rem 0.5rem;
+  box-shadow: 0 4px 24px rgba(31, 38, 135, 0.10), 0 1px 8px rgba(0,0,0,0.06);
+  max-width: 400px;
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+#month h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+/* Item Adder Styles */
+.MuiPaper-root {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 1.5rem auto;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07) !important;
+  background: #f9fafb !important;
+  padding: 0.5rem 0.7rem;
+}
+
+.MuiInputBase-root {
+  flex: 1;
+  font-size: 1.1rem;
+  background: none;
+  border: none;
+  outline: none;
+  color: #232526;
+  padding: 0.5rem 0.7rem;
+}
+
+.MuiIconButton-root {
+  color: #fff !important;
+  background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%) !important;
+  border-radius: 50% !important;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(255,152,0,0.08), 0 0 12px 2px #ff980044;
+  filter: drop-shadow(0 0 8px #ff980055);
+}
+.MuiIconButton-root:hover {
+  background: linear-gradient(135deg, #ffb74d 0%, #ff7043 100%) !important;
+  box-shadow: 0 4px 16px 2px #ff980055;
+  filter: drop-shadow(0 0 16px #ff980077);
+}
+
+.MuiDivider-vertical {
+  margin: 0 0.5rem !important;
+  background: #e0e0e0 !important;
+}
+
+/* Item List Styles */
+.MuiList-root {
+  width: 100%;
+  max-width: 420px;
+  background: #fff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07) !important;
+  margin: 0 auto 1.5rem auto;
+  padding: 0.5rem 0;
+}
+
+.MuiListItem-root {
+  border-bottom: 1px solid #f0f0f0 !important;
+  transition: background 0.2s;
+  border-radius: 8px !important;
+}
+.MuiListItem-root:last-child {
+  border-bottom: none !important;
+}
+.MuiListItem-root:hover {
+  background: #f5f5f5 !important;
+}
+
+.MuiListItemText-root {
+  font-size: 1.1rem !important;
+  color: #232526 !important;
+}
+
+.MuiButton-root {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+  color: #232526 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  margin-right: 0.5rem !important;
+  padding: 0.3rem 1.1rem !important;
+  box-shadow: 0 2px 8px rgba(67,233,123,0.08);
+  transition: background 0.2s, color 0.2s;
+}
+.MuiButton-root:hover {
+  background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%) !important;
+  color: #111 !important;
+}
+
+.MuiListItemSecondaryAction-root {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.MuiSvgIcon-root {
+  /* color: #ff5722 !important; */
+  font-size: 1.5rem !important;
+  transition: color 0.2s;
+}
+.MuiSvgIcon-root:hover {
+  color: #d84315 !important;
+}
+
+/* Purchased Item Style */
+.text {
+  text-decoration: line-through;
+  color: #bdbdbd !important;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .nav {
+    font-size: 1.1rem;
+    padding: 0 0.5rem;
+    height: auto;
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 1.5rem;
+  }
+  #month {
+    font-size: 1.1rem;
+    padding: 0.7rem 0.2rem;
+    max-width: 98vw;
+    margin-bottom: 1.5rem;
+  }
+  .MuiPaper-root, .MuiList-root {
+    max-width: 98vw;
+    width: 100% !important;
+    padding: 0.3rem 0.2rem;
+    box-sizing: border-box;
+  }
+  .MuiPaper-root {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.5rem;
+  }
+  .MuiInputBase-root {
+    width: 100% !important;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  .MuiIconButton-root {
+    align-self: flex-end;
+    margin-top: 0.2rem;
+  }
 }

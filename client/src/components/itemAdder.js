@@ -50,16 +50,26 @@ const useStyles = makeStyles((theme) =>
 const ItemAdder = () => {
   const classes = useStyles();
   const [input, setInput] = React.useState('')
+  const [price, setPrice] = React.useState('')
   const [items, setItems] = React.useState([])
   const addItem = () => {
-    const data = { grocceryItem: input }
-
-    Axios.post('http://localhost:8000/groccery/add', data).then(response => {
-      setInput(" ")
+    const priceValue = parseFloat(price)
+    if (!input.trim() || !price || priceValue <= 0) {
+      alert('Please enter an item name and a price greater than 0.');
+      return;
+    }
+    if (priceValue <= 0) {
+      alert('Price must be greater than 0.');
+      return;
+    }
+    const data = { grocceryItem: input, price: priceValue }
+    Axios.post('http://localhost:9000/groccery/add', data).then(response => {
+      setInput("")
+      setPrice("")
     })
   }
   useEffect(async () => {
-    let data = await Axios.get('http://localhost:8000/groccery/getAll').then(response => {
+    let data = await Axios.get('http://localhost:9000/groccery/getAll').then(response => {
       setItems(response.data)
     })
   }, [items])
@@ -74,12 +84,30 @@ const ItemAdder = () => {
           }}
           value={input}
         />
+        <InputBase
+          className={classes.input}
+          placeholder="Price"
+          type="number"
+          min="0"
+          step="0.01"
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val === "" || parseFloat(val) >= 0) {
+              setPrice(val);
+            } else {
+              setPrice("0");
+            }
+          }}
+          value={price}
+          style={{ maxWidth: 90, marginLeft: 8 }}
+        />
         <Divider className={classes.divider} orientation="vertical" />
         <IconButton
           color="primary"
           className={classes.iconButton}
           aria-label="directions"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             addItem()
           }}
         >
