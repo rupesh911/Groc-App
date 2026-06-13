@@ -26,6 +26,6 @@ const { route } = require('./routes/itemMangementRoute');
 app.use('/',dataManipulationRoute)
 app.use('/groccery',dataManipulationRoute)
 
-app.listen(8000,()=>{
-    console.log(chalk.greenBright("Server is Running on PORT:8000"))
+app.listen(9000,()=>{
+    console.log(chalk.greenBright("Server is Running on PORT:9000"))
 })

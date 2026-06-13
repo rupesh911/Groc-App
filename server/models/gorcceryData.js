@@ -5,6 +5,11 @@ const groccerySchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    price: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     isPurchased:{
         type:Boolean,
         required:false

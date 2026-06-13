@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const chalk = require("chalk")
-mongoose.connect(`mongodb+srv://rupe678:CGfwJF2NPp4a2fhK@cluster0.nnfqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
+mongoose.connect(`mongodb+srv://rupesh123:Rupesh1299@grocery.rcthdnn.mongodb.net/`, {
    
 useCreateIndex: true,
     useNewUrlParser: true,
