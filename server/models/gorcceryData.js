@@ -14,6 +14,11 @@ const groccerySchema = new mongoose.Schema({
         type:Boolean,
         required:false
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 })
 
 const Groccery = new mongoose.model("Customer",groccerySchema)

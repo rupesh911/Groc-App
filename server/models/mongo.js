@@ -12,3 +12,8 @@ const connection = mongoose.connection;
 connection.once("open", () => {
     console.log(chalk.greenBright.bold("Connected to Database Successfully !!!"))
 })
+
+// fill: rgb(12 10 9);
+
+// color: rgba(0, 0, 0, 0.54);
+//     padding: 4px;

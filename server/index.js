@@ -1,31 +1,29 @@
 
-const express = require('express')
+require('dotenv').config()
 
-const chalk = require("chalk")
-const cors = require('cors');
+const express = require('express')
+const chalk = require('chalk')
+const cors = require('cors')
 
 const app = express()
-app.use(cors());
-app.options('*', cors());
+app.use(cors())
+app.options('*', cors())
+app.use(express.json())
 
+require('./models/mongo.js')
 
-app.get('/',(request,response) =>{
-    response.send('WELCOME TO BACKEND');
-  
-});
+const dataManipulationRoute = require('./routes/itemMangementRoute')
+const authRoute = require('./routes/authRoute')
+const paymentRoute = require('./routes/paymentRoute')
 
+app.get('/', (request, response) => {
+  response.send('WELCOME TO BACKEND')
+})
 
-require("./models/mongo.js");
-app.use(express.json());
+app.use('/auth', authRoute)
+app.use('/groccery', dataManipulationRoute)
+app.use('/payment', paymentRoute)
 
-
-const dataManipulationRoute = require('./routes/itemMangementRoute');
-const { request, response } = require('express');
-const { route } = require('./routes/itemMangementRoute');
-
-app.use('/',dataManipulationRoute)
-app.use('/groccery',dataManipulationRoute)
-
-app.listen(9000,()=>{
-    console.log(chalk.greenBright("Server is Running on PORT:9000"))
+app.listen(9000, () => {
+  console.log(chalk.greenBright('Server is Running on PORT:9000'))
 })
