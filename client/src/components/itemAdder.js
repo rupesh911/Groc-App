@@ -52,33 +52,36 @@ const ItemAdder = () => {
   const [input, setInput] = React.useState('')
   const [price, setPrice] = React.useState('')
   const [items, setItems] = React.useState([])
+  const fetchItems = async () => {
+    await Axios.get('http://localhost:9000/groccery/getAll').then(response => {
+      setItems(response.data)
+    })
+  }
+
   const addItem = () => {
     const priceValue = parseFloat(price)
     if (!input.trim() || !price || priceValue <= 0) {
       alert('Please enter an item name and a price greater than 0.');
       return;
     }
-    if (priceValue <= 0) {
-      alert('Price must be greater than 0.');
-      return;
-    }
     const data = { grocceryItem: input, price: priceValue }
     Axios.post('http://localhost:9000/groccery/add', data).then(response => {
       setInput("")
       setPrice("")
+      fetchItems()
     })
   }
-  useEffect(async () => {
-    let data = await Axios.get('http://localhost:9000/groccery/getAll').then(response => {
-      setItems(response.data)
-    })
-  }, [items])
+
+  useEffect(() => {
+    fetchItems()
+  }, [])
+
   return (
     <div>
       <Paper component="form" className={classes.root}>
         <InputBase
           className={classes.input}
-          placeholder="Add Shoping Items"
+          placeholder="Add grocery item (vegetables, fruits, dairy, snacks...)"
           onChange={(e) => {
             setInput(e.target.value)
           }}
@@ -114,7 +117,7 @@ const ItemAdder = () => {
           <AddIcon />
         </IconButton>
       </Paper>
-      <ItemList items={items} />
+      <ItemList items={items} refreshItems={fetchItems} />
     </div>
   )
 }

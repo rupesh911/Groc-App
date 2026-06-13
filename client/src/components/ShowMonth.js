@@ -2,12 +2,11 @@ import React from "react";
  import "./Style.css";
 
  var Month = () => {
-   const carentMonth = new Date();
-    const month = carentMonth.toLocaleString('default', { month: 'long' });
+   const month = 'June';
     return (
         <div className="p-3 mb-2 text-black" id="month">
             <center>
-                 <h2 className="text-center "> Plan for a Month of  {month}</h2> 
+                 <h2 className="text-center">Plan your grocery list for the month of {month}</h2>
             </center>
         </div>
 

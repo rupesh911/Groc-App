@@ -38,18 +38,16 @@ const useStyles = makeStyles((theme) =>
 
 
 const ItemList = (props) => {
-    const [orderStatus, setOrderStatus] = React.useState(false)
     const handleClick = (value) => {
         const data = { id: value._id }
-        Axios.post('http://localhost:9000/groccery/updatePurchaseStatus', data).then(response => {
-            setOrderStatus(!orderStatus)
+        Axios.post('http://localhost:9000/groccery/updatePurchaseStatus', data).then(() => {
+            if (props.refreshItems) props.refreshItems()
         })
     }
     const handelDelete = (value) => {
         const data = { id: value._id }
-        console.log(data)
-        Axios.post('http://localhost:9000/groccery/deleteGrocceryItem', data).then(response => {
-            setOrderStatus(!orderStatus)
+        Axios.post('http://localhost:9000/groccery/deleteGrocceryItem', data).then(() => {
+            if (props.refreshItems) props.refreshItems()
         })
     }
     const classes = useStyles();
