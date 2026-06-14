@@ -2,6 +2,8 @@ const express = require('express');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const authMiddleware = require('../middleware/authMiddleware');
+const adminMiddleware = require('../middleware/adminMiddleware');
+const Order = require('../models/order');
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -111,10 +113,21 @@ router.post('/create-order', authMiddleware, async (req, res) => {
 // Verify Razorpay Payment
 router.post('/verify-payment', authMiddleware, async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      items,
+      totalAmount,
+      deliveryInfo,
+    } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({ message: 'Missing payment details' });
+    }
+
+    if (!items || items.length === 0 || !totalAmount || !deliveryInfo) {
+      return res.status(400).json({ message: 'Missing order details for verification' });
     }
 
     // Verify signature
@@ -131,7 +144,26 @@ router.post('/verify-payment', authMiddleware, async (req, res) => {
       });
     }
 
-    // Signature is valid - payment is successful
+    const deliveryAddress = `${deliveryInfo.addressLine1}, ${deliveryInfo.city}, ${deliveryInfo.state}, ${deliveryInfo.pincode}` +
+      (deliveryInfo.landmark ? `, Landmark: ${deliveryInfo.landmark}` : '');
+
+    const order = new Order({
+      userId: req.userId,
+      userEmail: req.userEmail,
+      userName: req.userName || '',
+      items,
+      totalAmount,
+      deliveryInfo: {
+        ...deliveryInfo,
+        address: deliveryAddress,
+      },
+      razorpayOrderId: razorpay_order_id,
+      razorpayPaymentId: razorpay_payment_id,
+      status: 'paid',
+    });
+
+    await order.save();
+
     res.json({
       success: true,
       message: 'Payment verified successfully',
@@ -144,6 +176,61 @@ router.post('/verify-payment', authMiddleware, async (req, res) => {
       message: 'Payment verification failed',
       error: error.message,
     });
+  }
+});
+
+router.post('/create-cod-order', authMiddleware, async (req, res) => {
+  try {
+    const { items, totalAmount, deliveryInfo } = req.body;
+
+    if (!items || items.length === 0 || !totalAmount || !deliveryInfo) {
+      return res.status(400).json({ message: 'Missing order details' });
+    }
+
+    if (!deliveryInfo.fullName || !deliveryInfo.phone || !deliveryInfo.addressLine1 || !deliveryInfo.city || !deliveryInfo.state || !deliveryInfo.pincode) {
+      return res.status(400).json({ message: 'Delivery address and contact details are required' });
+    }
+
+    const deliveryAddress = `${deliveryInfo.addressLine1}, ${deliveryInfo.city}, ${deliveryInfo.state}, ${deliveryInfo.pincode}` +
+      (deliveryInfo.landmark ? `, Landmark: ${deliveryInfo.landmark}` : '');
+
+    const order = new Order({
+      userId: req.userId,
+      userEmail: req.userEmail,
+      userName: req.userName || '',
+      items,
+      totalAmount,
+      deliveryInfo: {
+        ...deliveryInfo,
+        address: deliveryAddress,
+      },
+      paymentMethod: 'cod',
+      status: 'pending',
+      razorpayOrderId: `COD_${req.userId}_${Date.now()}`,
+    });
+
+    await order.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Order placed successfully. Payment will be collected at delivery.',
+      order_id: order._id,
+    });
+  } catch (error) {
+    console.error('COD order creation error:', error);
+    res.status(500).json({
+      message: 'Failed to create order',
+      error: error.message,
+    });
+  }
+});
+
+router.get('/admin/orders', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Unable to load admin orders', error: error.message });
   }
 });
 

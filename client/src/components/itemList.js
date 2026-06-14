@@ -56,18 +56,38 @@ const ItemList = (props) => {
             if (props.refreshItems) props.refreshItems()
         })
     }
+
+    const aggregateItems = (items) => {
+        const grouped = {};
+        items.forEach(item => {
+            const key = item.grocceryItem;
+            if (!grouped[key]) {
+                grouped[key] = {
+                    ...item,
+                    quantity: 1,
+                    totalPrice: item.price,
+                };
+            } else {
+                grouped[key].quantity += 1;
+                grouped[key].totalPrice += item.price;
+            }
+        });
+        return Object.values(grouped);
+    };
+
     const classes = useStyles();
-    const total = props.items.reduce((sum, item) => sum + (item.price > 0 ? item.price : 0), 0);
+    const aggregatedItems = aggregateItems(props.items);
+    const total = aggregatedItems.reduce((sum, item) => sum + (item.totalPrice > 0 ? item.totalPrice : 0), 0);
     return (
         <>
         <List dense className={classes.root}>
-            {props.items.map((value) => {
-                const showPrice = value.price > 0;
+            {aggregatedItems.map((value, index) => {
+                const showPrice = value.totalPrice > 0;
                 return (
-                    <ListItem key={value._id} button>
+                    <ListItem key={index} button>
                         <ListItemText
                             id={value._id}
-                            primary={value.grocceryItem + (showPrice ? `  |  ₹${Number(value.price).toFixed(2)}` : '')}
+                            primary={value.grocceryItem + (value.quantity > 1 ? ` (x${value.quantity})` : '') + (showPrice ? `  |  ₹${Number(value.totalPrice).toFixed(2)}` : '')}
                             primaryTypographyProps={{
                                 className: value.isPurchased ? classes.purchasedText : '',
                                 style: { fontSize: '1rem' },
@@ -87,7 +107,7 @@ const ItemList = (props) => {
             })}
         </List>
         <div style={{textAlign: 'right', fontWeight: 600, margin: '0.7em 0 0.2em 0', fontSize: '1.1em', color: '#232526'}}>Total: ₹{total.toFixed(2)}</div>
-        {props.items.length > 0 && (
+        {aggregatedItems.length > 0 && (
             <button 
                 className="checkout-action-button"
                 onClick={() => {

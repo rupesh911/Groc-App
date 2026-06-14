@@ -13,9 +13,10 @@ const CheckoutSuccess = () => {
     const params = new URLSearchParams(location.search);
     const orderId = params.get('order_id');
     const paymentId = params.get('payment_id');
+    const method = params.get('method');
 
     if (!orderId || !paymentId) {
-      setError('Invalid payment details. Payment may not have been completed.');
+      setError('Invalid order details. Order may not have been completed.');
       setLoading(false);
       return;
     }
@@ -69,14 +70,22 @@ const CheckoutSuccess = () => {
   }
 
   if (success) {
+    const params = new URLSearchParams(location.search);
+    const method = params.get('method');
+    const isCOD = method === 'cod';
+
     return (
       <div className="checkout-container">
         <div className="checkout-card" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
-          <h2 style={{ color: '#059669', marginBottom: '1rem' }}>Payment Successful!</h2>
+          <h2 style={{ color: '#059669', marginBottom: '1rem' }}>
+            {isCOD ? 'Order Confirmed!' : 'Payment Successful!'}
+          </h2>
           <p style={{ color: 'var(--ink-soft)', marginBottom: '2rem', lineHeight: '1.6' }}>
-            Thank you for your order. Your groceries will be delivered soon. 
-            Check your email for order confirmation and tracking details.
+            {isCOD 
+              ? 'Thank you for your order. Payment will be collected at delivery. Your groceries will be delivered soon. Check your email for order confirmation and tracking details.'
+              : 'Thank you for your order. Your groceries will be delivered soon. Check your email for order confirmation and tracking details.'
+            }
           </p>
           <button
             className="checkout-button"

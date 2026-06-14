@@ -27,6 +27,12 @@ export const getUserEmail = () => localStorage.getItem('grocify_email');
 export const getUserName = () => localStorage.getItem('grocify_name');
 export const isAuthenticated = () => Boolean(getAuthToken());
 
+const ADMIN_EMAIL = process.env.REACT_APP_ADMIN_EMAIL || 'owner@example.com';
+export const isAdmin = () => {
+  const email = getUserEmail();
+  return Boolean(email && email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim());
+};
+
 export const authHeader = () => {
   const token = getAuthToken();
   return token ? { Authorization: `Bearer ${token}` } : {};

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/grocify-icon.svg';
 import './Style.css';
 
-function Navbar({ isAuthenticated, onLogout, currentUser }) {
+function Navbar({ isAuthenticated, isAdmin, onLogout, currentUser }) {
   return (
     <div className="nav">
       <div className="nav-left">
@@ -18,6 +18,11 @@ function Navbar({ isAuthenticated, onLogout, currentUser }) {
           <div className="nav-user-block">
             <span className="nav-user">Hi, {currentUser || 'Grocifier'}</span>
             <span className="nav-status">You are logged in</span>
+            {isAdmin && (
+              <Link className="nav-link" to="/admin">
+                Admin
+              </Link>
+            )}
             <Link className="nav-link" to="/profile">
               Profile
             </Link>
