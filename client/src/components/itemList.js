@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) =>
 const ItemList = (props) => {
     const handleClick = (value) => {
         const data = { id: value._id }
-        Axios.post('http://localhost:9000/groccery/updatePurchaseStatus', data, {
+        Axios.post(`${process.env.REACT_APP_SERVER_URL}/groccery/updatePurchaseStatus`, data,{
             headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
         }).then(() => {
             if (props.refreshItems) props.refreshItems()
@@ -50,7 +50,7 @@ const ItemList = (props) => {
     }
     const handelDelete = (value) => {
         const data = { id: value._id }
-        Axios.post('http://localhost:9000/groccery/deleteGrocceryItem', data, {
+        Axios.post(`${process.env.REACT_APP_SERVER_URL}/groccery/deleteGrocceryItem`, data, {
             headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
         }).then(() => {
             if (props.refreshItems) props.refreshItems()

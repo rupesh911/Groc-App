@@ -45,19 +45,25 @@ const Checkout = ({ onBack }) => {
   const aggregatedTotal = aggregatedItems.reduce((sum, item) => sum + (item.totalPrice || 0), 0);
 
   const fetchItems = () => {
-    Axios.get('http://localhost:9000/groccery/getAll', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
-    })
-      .then((response) => {
-        setItems(response.data);
-        const totalPrice = response.data.reduce((sum, item) => sum + (item.price || 0), 0);
-        setTotal(totalPrice);
-      })
-      .catch(() => {
-        setError('Unable to fetch items. Please try again.');
-      });
-  };
+  Axios.get(`${process.env.REACT_APP_SERVER_URL}/groccery/getAll`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('grocify_token')}`,
+    },
+  })
+    .then((response) => {
+      setItems(response.data);
 
+      const totalPrice = response.data.reduce(
+        (sum, item) => sum + (item.price || 0),
+        0
+      );
+
+      setTotal(totalPrice);
+    })
+    .catch(() => {
+      setError('Unable to fetch items. Please try again.');
+    });
+};
   // Load Razorpay script
   const loadRazorpayScript = () => {
     const script = document.createElement('script');
@@ -93,8 +99,8 @@ const Checkout = ({ onBack }) => {
       // Cash on Delivery
       if (paymentMethod === 'cod') {
         const codResponse = await Axios.post(
-          'http://localhost:9000/payment/create-cod-order',
-          {
+  `${process.env.REACT_APP_SERVER_URL}/payment/create-cod-order`,
+  {
             items: aggregatedItems.map(item => ({
               name: item.grocceryItem,
               price: item.price,
@@ -119,8 +125,8 @@ const Checkout = ({ onBack }) => {
 
       // Razorpay Payment
       const orderResponse = await Axios.post(
-        'http://localhost:9000/payment/create-order',
-        {
+  `${process.env.REACT_APP_SERVER_URL}/payment/create-order`,
+  {
           items: aggregatedItems.map(item => ({
             name: item.grocceryItem,
             price: item.price,
@@ -148,8 +154,8 @@ const Checkout = ({ onBack }) => {
           // Step 3: Verify payment on server
           try {
             const verifyResponse = await Axios.post(
-              'http://localhost:9000/payment/verify-payment',
-              {
+  `${process.env.REACT_APP_SERVER_URL}/payment/verify-payment`,
+  {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,

@@ -53,7 +53,7 @@ const ItemAdder = ({ onShowCheckout }) => {
   const [price, setPrice] = React.useState('')
   const [items, setItems] = React.useState([])
   const fetchItems = async () => {
-    await Axios.get('http://localhost:9000/groccery/getAll', {
+    await Axios.get(`${process.env.REACT_APP_SERVER_URL}/groccery/getAll`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
     }).then((response) => {
       setItems(response.data)
@@ -67,7 +67,7 @@ const ItemAdder = ({ onShowCheckout }) => {
       return;
     }
     const data = { grocceryItem: input, price: priceValue }
-    Axios.post('http://localhost:9000/groccery/add', data, {
+    Axios.post(`${process.env.REACT_APP_SERVER_URL}/groccery/add`, data, {
       headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
     }).then(() => {
       setInput("")

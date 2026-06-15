@@ -64,7 +64,7 @@ const CategoryPage = ({ category, onBack }) => {
 
   const addProduct = (product) => {
     const data = { grocceryItem: `${product.name} (${category})`, price: product.price };
-    Axios.post('http://localhost:9000/groccery/add', data, {
+    Axios.post(`${process.env.REACT_APP_SERVER_URL}/groccery/add`, data, {
       headers: { Authorization: `Bearer ${localStorage.getItem('grocify_token')}` },
     })
       .then(() => {

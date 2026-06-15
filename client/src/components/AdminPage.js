@@ -11,7 +11,7 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await Axios.get('http://localhost:9000/payment/admin/orders', {
+        const response = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/payment/admin/orders`, {
           headers: { ...authHeader() },
         });
         setOrders(response.data);
@@ -232,11 +232,35 @@ const AdminPage = () => {
                 <table style={adminStyles.itemTable}>
                   <thead style={adminStyles.itemTableHeader}>
                     <tr>
-                      <th style={adminStyles.itemTableHeaderCell}>Product</th>
-                      <th style={adminStyles.itemTableHeaderCell} style={{ textAlign: 'right' }}>Quantity</th>
-                      <th style={adminStyles.itemTableHeaderCell} style={{ textAlign: 'right' }}>Price</th>
-                      <th style={adminStyles.itemTableHeaderCell} style={{ textAlign: 'right' }}>Total</th>
-                    </tr>
+  <th style={adminStyles.itemTableHeaderCell}>Product</th>
+
+  <th
+    style={{
+      ...adminStyles.itemTableHeaderCell,
+      textAlign: 'right'
+    }}
+  >
+    Quantity
+  </th>
+
+  <th
+    style={{
+      ...adminStyles.itemTableHeaderCell,
+      textAlign: 'right'
+    }}
+  >
+    Price
+  </th>
+
+  <th
+    style={{
+      ...adminStyles.itemTableHeaderCell,
+      textAlign: 'right'
+    }}
+  >
+    Total
+  </th>
+</tr>
                   </thead>
                   <tbody>
                     {order.items.map((item, itemIdx) => (

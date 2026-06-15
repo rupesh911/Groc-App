@@ -1,7 +1,6 @@
 import Axios from 'axios';
 
 const API_BASE = 'http://localhost:9000';
-
 export const registerUser = (payload) => {
   return Axios.post(`${API_BASE}/auth/register`, payload);
 };
@@ -28,9 +27,12 @@ export const getUserName = () => localStorage.getItem('grocify_name');
 export const isAuthenticated = () => Boolean(getAuthToken());
 
 const ADMIN_EMAIL = process.env.REACT_APP_ADMIN_EMAIL || 'owner@example.com';
+
 export const isAdmin = () => {
   const email = getUserEmail();
-  return Boolean(email && email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim());
+  return Boolean(
+    email && email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim()
+  );
 };
 
 export const authHeader = () => {
